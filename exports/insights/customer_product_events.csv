@@ -1,0 +1,1 @@
+event_id,timestamp,customer_id,session_id,event_type,product_id,device_type,traffic_source,campaign_id,page_category,session_duration_sec,experiment_group,product_id_int,signup_date,country,age,gender,loyalty_tier,acquisition_channel,category,brand,base_price,launch_date,is_premium
