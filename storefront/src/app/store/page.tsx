@@ -4,6 +4,8 @@ import PageTracker from "@/components/PageTracker";
 import ProductImage from "@/components/ProductImage";
 import { TrackedLink } from "@/components/TrackedLink";
 
+export const dynamic = 'force-static';
+
 const fallbackCategories = ["Electronics", "Fashion", "Beauty", "Sports", "Accessories"];
 
 function formatMoney(value: number | null): string {
