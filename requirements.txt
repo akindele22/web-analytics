@@ -4,7 +4,6 @@
 # Python version constraint: Use 3.11 or 3.12 for full wheel support
 # Python 3.14 is still pre-release and lacks binary wheels for scientific packages
 # This causes compilation errors with pandas' Cython code
-python>=3.11,<3.14
 
 Flask==3.0.3
 Flask-CORS==4.0.1
