@@ -493,7 +493,8 @@ def register_user():
         settings.session_cookie_name,
         token,
         httponly=True,
-        samesite="Lax",
+        samesite="None",   # ← changed
+        secure=True,       # ← added
         max_age=settings.session_ttl_seconds,
     )
     return resp
@@ -528,11 +529,11 @@ def login_user():
         settings.session_cookie_name,
         token,
         httponly=True,
-        samesite="Lax",
+        samesite="None",   # ← changed
+        secure=True,       # ← added
         max_age=settings.session_ttl_seconds,
     )
     return resp
-
 
 @api.post("/auth/logout")
 def logout_user():
