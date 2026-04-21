@@ -5,6 +5,9 @@ import ProductImage from "@/components/ProductImage";
 import PageTracker from "@/components/PageTracker";
 import { notFound } from "next/navigation";
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export async function generateStaticParams() {
   try {
     const res = await fetch(
@@ -18,6 +21,8 @@ export async function generateStaticParams() {
     return [];
   }
 }
+
+// rest of your existing page component...
 
 export default async function ProductPage({ params }: { params: Promise<{ sku: string }> }) {
   const { sku } = await params;
