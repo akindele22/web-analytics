@@ -1,6 +1,10 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
 
+# Python version constraint: Use 3.11 or 3.12 for full wheel support
+# Python 3.14 is still pre-release and lacks binary wheels for scientific packages
+# This causes compilation errors with pandas' Cython code
+
 Flask==3.0.3
 Flask-CORS==4.0.1
 pandas==2.2.2
@@ -23,4 +27,3 @@ python-dotenv==1.0.1
 torch==2.3.1
 transformers==4.41.2
 accelerate==0.31.0
-

@@ -5,6 +5,25 @@ import ProductImage from "@/components/ProductImage";
 import PageTracker from "@/components/PageTracker";
 import { notFound } from "next/navigation";
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/api/products`
+    );
+    const data = await res.json();
+    return (data.rows || []).map((product: { sku: string }) => ({
+      sku: product.sku,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// rest of your existing page component...
+
 export default async function ProductPage({ params }: { params: Promise<{ sku: string }> }) {
   const { sku } = await params;
   const product = (await getProduct(sku)) ?? findProductFromPublicImages(sku);
