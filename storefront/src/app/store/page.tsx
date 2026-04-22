@@ -6,7 +6,17 @@ import { TrackedLink } from "@/components/TrackedLink";
 
 export const dynamic = 'force-static';
 
-const fallbackCategories = ["Electronics", "Fashion", "Beauty", "Sports", "Accessories"];
+const fallbackCategories = [
+  "Beauty",
+  "Shoes",
+  "Apparel",
+  "Accessories",
+  "Fitness",
+  "Electronics",
+  "Misc",
+  "Fashion",
+  "Sports",
+];
 
 function formatMoney(value: number | null): string {
   return value == null ? "-" : `£${value.toFixed(2)}`;
@@ -56,29 +66,6 @@ export default async function StorePage({
   return (
     <>
       <PageTracker />
-      <section className="card">
-        <div className="cardBody">
-          <div className="pill">Store Page</div>
-          <h1 className="title">Featured Products</h1>
-          <p className="subtitle">Add your images via `image_url` in products.csv or place files by SKU in `/public/images/products/`.</p>
-          <div className="categoryRow compactCategoryRow">
-            {categories.map((cat) => (
-              <TrackedLink
-                key={cat}
-                href={`/store?category=${encodeURIComponent(cat)}`}
-                className={`categoryTile card ${selectedCategory.toLowerCase() === cat.toLowerCase() ? "categoryActive" : ""}`}
-                eventLabel="store_category_filter"
-              >
-                <div className="cardBody">
-                  <div className="categoryIcon">{cat.slice(0, 1)}</div>
-                  <h3>{cat}</h3>
-                </div>
-              </TrackedLink>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="grid productGrid">
         {filtered.length === 0 ? (
           <article className="card">
