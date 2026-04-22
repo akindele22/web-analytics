@@ -2,7 +2,17 @@ import PageTracker from "@/components/PageTracker";
 import { listProducts } from "@/lib/api";
 import { TrackedLink } from "@/components/TrackedLink";
 
-const fallbackCategories = ["Electronics", "Fashion", "Beauty", "Sports", "Accessories"];
+const fallbackCategories = [
+  "Beauty",
+  "Shoes",
+  "Apparel",
+  "Accessories",
+  "Fitness",
+  "Electronics",
+  "Misc",
+  "Fashion",
+  "Sports",
+];
 
 export default async function HomePage() {
   const products = await listProducts().catch(() => []);
@@ -19,18 +29,20 @@ export default async function HomePage() {
   return (
     <>
       <PageTracker />
-      <section className="heroBlock card">
+      <section 
+        className="heroBlock card"
+        style={{ backgroundImage: 'url(/modern-man.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
         <div className="heroShade" />
         <div className="cardBody heroBody">
           <div className="pill">CommercePulse Experience</div>
-          <h1 className="heroTitle">Build a premium storefront and monitor KPIs in one flow</h1>
+          <h1 className="heroTitle">Modern commerce with faster product discovery</h1>
           <p className="subtitle heroSubtitle">
-            Run your product showcase, checkout workflow, and admin analytics dashboard from a unified UI inspired by
-            modern commercial templates.
+            Start in the store page and use category filters to find products that match your style.
           </p>
           <div className="btnRow">
-            <TrackedLink href="/store" className="btn" eventLabel="hero_go_store">
-              Explore Store
+            <TrackedLink href="/store?category=Fashion" className="btn" eventLabel="hero_go_store">
+              Browse Fashion
             </TrackedLink>
           </div>
         </div>
