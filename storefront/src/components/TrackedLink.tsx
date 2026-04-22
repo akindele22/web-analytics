@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { sendEvent } from "@/lib/analytics";
 
-type TrackedLinkProps = {
+type TrackedLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "children"> & {
   href: string;
   className?: string;
   children: ReactNode;
@@ -23,11 +23,12 @@ type TrackedExternalLinkProps = {
   rel?: string;
 };
 
-export function TrackedLink({ href, className, children, eventLabel, productSku, metadata }: TrackedLinkProps) {
+export function TrackedLink({ href, className, children, eventLabel, productSku, metadata, ...linkProps }: TrackedLinkProps) {
   return (
     <Link
       href={href}
       className={className}
+      {...linkProps}
       onClick={() => {
         void sendEvent({
           event_type: "click",
