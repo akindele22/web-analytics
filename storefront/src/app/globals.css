@@ -134,7 +134,7 @@ a {
 .heroBlock {
   position: relative;
   min-height: 370px;
-  background-image: url("/images/products/placeholder.svg");
+  background-image: url("/modern-man.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -293,11 +293,22 @@ a {
   margin-bottom: 0;
   background: #f8fafc;
   color: #151b25;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.categoryTile:hover {
+  transform: translateY(-1px);
+}
+
+.categoryTile:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(243, 184, 45, 0.24);
 }
 
 .categoryActive {
-  border-color: rgba(243, 184, 45, 0.6);
-  box-shadow: 0 14px 28px rgba(243, 184, 45, 0.18);
+  border-color: rgba(243, 184, 45, 0.9);
+  box-shadow: 0 18px 32px rgba(243, 184, 45, 0.24);
 }
 
 .categoryTile .cardBody {
@@ -310,6 +321,18 @@ a {
   font-size: 1.5rem;
 }
 
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.filterInfo {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
 .categoryIcon {
   width: 60px;
   height: 60px;
