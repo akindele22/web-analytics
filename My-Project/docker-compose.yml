@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+    environment:
+      FLASK_ENV: production
+      DATA_DIR: /app/data
+      EXPORT_DIR: /app/exports
+      EXPORT_INTERVAL_SECONDS: ${EXPORT_INTERVAL_SECONDS:-10}
+      DASH_REFRESH_SECONDS: ${DASH_REFRESH_SECONDS:-1}
+      PORT: 8000
+      POSTGRES_DSN: ${POSTGRES_DSN:-postgresql://postgres:postgres@postgres:5432/ecommerce}
+      CHATBOT_PROVIDER: ${CHATBOT_PROVIDER:-}
+      HF_MODEL_NAME: ${HF_MODEL_NAME:-distilgpt2}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./exports:/app/exports
+
+  frontend:
+    build:
+      context: ./storefront
+      args:
+        NEXT_PUBLIC_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+    environment:
+      INTERNAL_API_BASE: http://api:8000
+
+volumes:
+  pgdata:
