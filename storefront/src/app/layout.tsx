@@ -37,10 +37,6 @@ export default function RootLayout({
         <main className="container main">{children}</main>
         <footer className="footer">
           <div className="container footerInner">
-            <span>
-              Place product images in `storefront/public/images/products/` or
-              set `image_url` in `products.csv`.
-            </span>
           </div>
         </footer>
         <ToastContainer />
