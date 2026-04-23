@@ -26,29 +26,55 @@ type StoreFilterProps = {
 export default function StoreFilter({ products, categories }: StoreFilterProps) {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [liveProducts, setLiveProducts] = useState<Product[]>(products);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+
+  useEffect(() => {
+    const apiBase = (process.env.NEXT_PUBLIC_API_BASE || "").replace(/\/+$/, "");
+    const fetchUrl = apiBase ? `${apiBase}/api/products` : "/api/products";
+    let isActive = true;
+
+    async function loadProducts() {
+      try {
+        const response = await fetch(fetchUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Failed to load products: ${response.status}`);
+        const data = (await response.json()) as { rows: Product[] };
+        if (!isActive) return;
+        setLiveProducts(data.rows);
+      } catch {
+        if (!isActive) return;
+        setLiveProducts(products);
+      }
+    }
+
+    void loadProducts();
+
+    return () => {
+      isActive = false;
+    };
+  }, [products]);
 
   useEffect(() => {
     const category = searchParams.get("category")?.trim() || "";
     setSelectedCategory(category);
     setFilteredProducts(
       category
-        ? products.filter((p) => (p.category || "").trim().toLowerCase() === category.toLowerCase())
-        : products,
+        ? liveProducts.filter((p) => (p.category || "").trim().toLowerCase() === category.toLowerCase())
+        : liveProducts,
     );
-  }, [products, searchParams]);
+  }, [liveProducts, searchParams]);
 
   const productCategories = useMemo(
     () =>
       Array.from(
         new Set(
-          products
+          liveProducts
             .map((p) => p.category || "")
             .map((c) => c.trim())
             .filter((c) => c.length > 0),
         ),
       ),
-    [products],
+    [liveProducts],
   );
 
   const allCategories = useMemo(
