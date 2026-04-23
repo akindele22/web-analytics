@@ -52,7 +52,7 @@ export default async function HomePage() {
         {categories.map((cat) => (
           <TrackedLink
             key={cat}
-            href={`/store?category=${encodeURIComponent(cat)}`}
+            href={{ pathname: "/store", query: { category: cat } }}
             className="categoryTile card"
             eventLabel="home_category_select"
           >

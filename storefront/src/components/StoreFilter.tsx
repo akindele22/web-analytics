@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/api";
 import { TrackedLink } from "@/components/TrackedLink";
@@ -23,7 +23,7 @@ type StoreFilterProps = {
   categories: string[];
 };
 
-function StoreFilterInner({ products, categories }: StoreFilterProps) {
+export default function StoreFilter({ products, categories }: StoreFilterProps) {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
@@ -137,13 +137,5 @@ function StoreFilterInner({ products, categories }: StoreFilterProps) {
           ))}
       </section>
     </>
-  );
-}
-
-export default function StoreFilter(props: StoreFilterProps) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <StoreFilterInner {...props} />
-    </Suspense>
   );
 }
