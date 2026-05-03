@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { listProducts } from "@/lib/api";
 import { listProductsFromPublicImages } from "@/lib/image-products";
 import PageTracker from "@/components/PageTracker";
@@ -25,6 +24,7 @@ export default async function StorePage() {
       (publicProduct) => !products.some((product) => product.image_url === publicProduct.image_url),
     ),
   ];
+
   const productCategories = Array.from(
     new Set(
       combinedProducts
@@ -38,9 +38,7 @@ export default async function StorePage() {
   return (
     <>
       <PageTracker />
-      <Suspense fallback={<div>Loading store...</div>}>
-        <StoreFilter products={combinedProducts} categories={categories} />
-      </Suspense>
+      <StoreFilter products={combinedProducts} categories={categories} />
     </>
   );
 }

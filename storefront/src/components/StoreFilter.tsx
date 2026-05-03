@@ -14,7 +14,7 @@ const fallbackCategories = [
   "Fitness",
   "Electronics",
   "Misc",
-  "Fashion",
+  "Fashion", 
   "Sports",
 ];
 
