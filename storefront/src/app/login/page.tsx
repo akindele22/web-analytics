@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageTracker from "@/components/PageTracker";
-import { loginUser, registerUser } from "@/lib/auth";
+import { loginUser, registerUser, validateAdminAccessCode } from "@/lib/auth";
 import { TrackedLink } from "@/components/TrackedLink";
 
 export default function LoginPage() {
@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"user" | "admin">("user");
+  const [adminAccessCode, setAdminAccessCode] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -22,9 +23,23 @@ export default function LoginPage() {
     setBusy(true);
     setMessage(null);
     try {
+      if (mode === "register" && role === "admin") {
+        const validCode = validateAdminAccessCode(adminAccessCode.trim());
+        if (!validCode) {
+          throw new Error("Admin secret code is required to create an admin account.");
+        }
+      }
+
       const user = mode === "register"
         ? await registerUser({ name, email, password, gender, role })
         : await loginUser({ email, password });
+
+      if (user?.role === "admin") {
+        const validCode = validateAdminAccessCode(adminAccessCode.trim());
+        if (!validCode) {
+          throw new Error("Admin secret code is required to access the admin dashboard.");
+        }
+      }
 
       const destination = user?.role === "admin" ? "/admin" : "/store";
       router.replace(destination);
@@ -82,6 +97,15 @@ export default function LoginPage() {
             <label>
               <span>Password</span>
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </label>
+            <label>
+              <span>Admin Secret Code</span>
+              <input
+                type="password"
+                value={adminAccessCode}
+                onChange={(e) => setAdminAccessCode(e.target.value)}
+                placeholder={mode === "register" && role === "admin" ? "Required for admin" : "Required only for admin access"}
+              />
             </label>
             <button className="btn" type="submit" disabled={busy}>
               {busy ? "Working..." : mode === "register" ? "Create Account" : "Login"}
