@@ -14,7 +14,7 @@ import {
   type CustomerProductInsights,
   type SiteAnalytics,
 } from "@/lib/api";
-import { fetchMe, logoutUser, type AuthUser } from "@/lib/auth";
+import { fetchMe, logoutUser, validateAdminAccessCode, hasAdminAccessCode, type AuthUser } from "@/lib/auth";
 import { TrackedLink } from "@/components/TrackedLink";
 
 function money(v: number): string {
@@ -189,6 +189,9 @@ export default function AdminPage() {
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [adminAccessCode, setAdminAccessCode] = useState("");
+  const [accessError, setAccessError] = useState<string | null>(null);
+  const [adminAccessValid, setAdminAccessValid] = useState(() => hasAdminAccessCode());
   const [overview, setOverview] = useState({
     total_sales: 0,
     total_orders: 0,
@@ -207,6 +210,11 @@ export default function AdminPage() {
 
   useEffect(() => {
     async function load() {
+      if (!adminAccessValid) {
+        setLoading(false);
+        return;
+      }
+
       const me = await fetchMe();
       if (!me || me.role !== "admin") {
         router.replace("/login");
@@ -233,9 +241,52 @@ export default function AdminPage() {
       setLoading(false);
     }
     void load();
-  }, [router]);
+  }, [router, adminAccessValid]);
+
+  function handleAccessSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setAccessError(null);
+    if (validateAdminAccessCode(adminAccessCode.trim())) {
+      setAdminAccessValid(true);
+      setLoading(true);
+      setAdminAccessCode("");
+      return;
+    }
+    setAccessError("Invalid admin secret code. Please try again.");
+  }
 
   const userLabel = useMemo(() => (user ? `${user.name} (${user.email})` : "Admin"), [user]);
+
+  if (!adminAccessValid) {
+    return (
+      <>
+        <PageTracker />
+        <section className="card authCard">
+          <div className="cardBody">
+            <div className="pill">Admin Access</div>
+            <h1 className="title">Enter admin secret code</h1>
+            <p className="subtitle">This page requires the admin secret code before loading analytics.</p>
+            <form onSubmit={handleAccessSubmit} className="authForm">
+              <label>
+                <span>Secret Code</span>
+                <input
+                  type="password"
+                  value={adminAccessCode}
+                  onChange={(e) => setAdminAccessCode(e.target.value)}
+                  required
+                  autoFocus
+                />
+              </label>
+              <button className="btn" type="submit">
+                Unlock Admin Dashboard
+              </button>
+              {accessError ? <p className="subtitle">{accessError}</p> : null}
+            </form>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   if (loading) {
     return (
