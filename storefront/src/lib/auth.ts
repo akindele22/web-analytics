@@ -39,6 +39,29 @@ export function writeProfile(user: AuthUser | null) {
   localStorage.setItem("ea_user_id", user.user_id);
 }
 
+const ADMIN_ACCESS_KEY = "ea_admin_access_granted";
+const ADMIN_SECRET_CODE = "62025040";
+
+export function hasAdminAccessCode(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(ADMIN_ACCESS_KEY) === "true";
+}
+
+export function validateAdminAccessCode(code: string): boolean {
+  if (typeof window === "undefined") return false;
+  if (code === ADMIN_SECRET_CODE) {
+    localStorage.setItem(ADMIN_ACCESS_KEY, "true");
+    return true;
+  }
+  localStorage.removeItem(ADMIN_ACCESS_KEY);
+  return false;
+}
+
+export function clearAdminAccessCode() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(ADMIN_ACCESS_KEY);
+}
+
 export async function registerUser(input: {
   name: string;
   email: string;
